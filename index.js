@@ -14,35 +14,30 @@ xhr.open('GET', `https://newsapi.org/v2/top-headlines?sources=${source}&apikey=$
 // What to do when response is ready
 xhr.onload = function () {
     if (this.status === 200) {
-        let json = JSON.parse(this.responseText)
+        let json = JSON.parse(this.responseText);
         let articles = json.articles
-        console.log(json);
-        for (news in articles) {
-            console.log(articles[news])
-        }
+        console.log(articles);
+        let newsHtml = "";
+        articles.forEach(function (element, index) {
+
+            let news = `<div class="accordion-item">
+                            <h2 class="accordion-header" id="heading${index}">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">
+                                    ${element["title"]}
+                                </button>
+                            </h2>
+                            <div id="collapse${index}" class="accordion-collapse collapse" aria-labelledby="heading${index}"
+                                data-bs-parent="#newsAccordion">
+                                <div class="accordion-body">${element["content"]}. <a href="${element['url']}" target="_blank">Read more here</a></div>
+                            </div>
+                        </div>`;
+            newsHtml += news;
+        });
+        newsAccordion.innerHTML = newsHtml;
     } else {
         console.log("Some error occured")
     }
 }
 
 xhr.send()
-
-let news = `<div class="accordion-item">
-                <h2 class="accordion-header" id="headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        Accordion Item #3
-                    </button>
-                </h2>
-                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the
-                        collapse plugin adds the appropriate classes that we use to style each element. These classes
-                        control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                        modify any of this with custom CSS or overriding our default variables. It's also worth noting
-                        that just about any HTML can go within the <code>.accordion-body</code>, though the transition
-                        does limit overflow.
-                    </div>
-                </div>
-</div>`
